@@ -44,9 +44,16 @@ export default function Home() {
     return '🧍🏻‍♀️'; // 기본
   };
 
-  // 사운드 객체들 미리 생성
-  const scoreSound = new Audio('/sound/score.mp3');
-  scoreSound.volume = 0.5;
+  const [scoreSound, setScoreSound] = useState(null);
+
+  // 컴포넌트 마운트 시 사운드 객체 생성
+  useEffect(() => {
+    if (typeof window !== 'undefined' && typeof Audio !== 'undefined') {
+      const audio = new Audio('/sound/score.mp3');
+      audio.volume = 0.5;
+      setScoreSound(audio);
+    }
+  }, []);
 
   // (성공엔딩) 점수가 1000점이 되면 게임 종료
   useEffect(() => {
@@ -151,10 +158,12 @@ export default function Home() {
           setPoops((prev) => prev.filter((p) => p.id !== poop.id));
 
           // 사운드 재생
-          scoreSound.currentTime = 0; // 재생 위치를 처음으로
-          scoreSound.play().catch((error) => {
-            console.log('사운드 재생 실패:', error);
-          });
+          if (scoreSound) {
+            scoreSound.currentTime = 0;
+            scoreSound.play().catch((error) => {
+              console.log('사운드 재생 실패:', error);
+            });
+          }
         }
       });
     };
