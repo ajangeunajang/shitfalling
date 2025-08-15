@@ -18,8 +18,8 @@ export default function Home() {
   // 개선 방안 - 상수로 분리
   const GAME_CONFIG = {
     // 엔딩 점수 컷
-    SUCCESS_SCORE: 2,
-    FAIL_POOP_COUNT: 2,
+    SUCCESS_SCORE: 1000,
+    FAIL_POOP_COUNT: 50,
 
     POOP_GENERATION_INTERVAL: 1000,
     COLLISION_CHECK_INTERVAL: 100,
