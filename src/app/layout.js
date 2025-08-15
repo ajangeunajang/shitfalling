@@ -1,6 +1,5 @@
 import './globals.css';
 import './multilingual.css';
-import MultilingualProvider from './components/MultilingualProvider';
 
 export const metadata = {
   title: '유명해지는 법',
@@ -28,9 +27,9 @@ export default function RootLayout({ children }) {
         />
       </head>
       <body
-        className={`antialiased bg-[url('/img/bg.webp')] bg-cover bg-center bg-no-repeat bg-fixed min-h-screen`}
+        className={`antialiased bg-[url('/img/bg.webp')] bg-cover bg-center bg-no-repeat bg-fixed min-h-screen scrollbar-hide`}
       >
-        <MultilingualProvider>{children}</MultilingualProvider>
+        {children}
       </body>
     </html>
   );

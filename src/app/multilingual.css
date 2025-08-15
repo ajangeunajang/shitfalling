@@ -15,17 +15,24 @@
   font-display: block;
 }
 
-body {
-  font-family: 'lazybones', 'Arial', sans-serif;
+@font-face {
+  font-family: 'Trattatello';
+  src: url('/font/Trattatello.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-  font-size: 18px;
-  line-height: 1em;
+  font-display: block;
 }
+
+body {
+  font-family:'Trattatello', 'lazybones', sans-serif;
+  font-size: 16px;
+  line-height: 1.3em;
+}
+
 
 /* 한국어 텍스트 - Pretendard 적용 */
 span.ml-ko {
-  font-size: 14px;
+  font-size: 12px;
   font-family: 'Pretendard', 'Arial', sans-serif;
   font-weight: 600;
   /* baseline shift */
