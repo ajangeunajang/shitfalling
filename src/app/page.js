@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -15,26 +15,31 @@ export default function Home() {
   const [fallenPoops, setFallenPoops] = useState([]); // 바닥에 떨어진 똥들 추가
   const [gameFailed, setGameFailed] = useState(false); // 게임 실패 상태 추가
 
-  const successEndScore = 1000;
-  const failEndScore = 5;
+  // 개선 방안 - 상수로 분리
+  const GAME_CONFIG = {
+    // 엔딩 점수 컷
+    SUCCESS_SCORE: 2,
+    FAIL_POOP_COUNT: 2,
 
-  // 점수에 따른 배경 이미지 결정 함수
+    POOP_GENERATION_INTERVAL: 1000,
+    COLLISION_CHECK_INTERVAL: 100,
+    BG_dark: 500,
+    BG_98: 600,
+    BG_sea: 800,
+    BG_universe: 900,
+  };
+
+  // 점수에 따른 배경 이미지 변경 함수
   const getBackgroundImage = (score) => {
-    // if (score >= 9) return '/img/bg.webp';
-    // if (score >= 8) return '/img/bg4.png';
-    // if (score >= 7) return '/img/bg5.png';
-    // if (score >= 6) return '/img/bg98.png';
-    // if (score >= 5) return '/img/bg1.png';
-
-    if (score >= 900) return '/img/bg.webp';
-    if (score >= 800) return '/img/bg4.png';
-    if (score >= 700) return '/img/bg5.png';
-    if (score >= 600) return '/img/bg98.png';
-    if (score >= 500) return '/img/bg1.png';
+    if (score >= GAME_CONFIG.SUCCESS_SCORE) return '/img/bg.webp';
+    if (score >= GAME_CONFIG.BG_universe) return '/img/bg4.png';
+    if (score >= GAME_CONFIG.BG_sea) return '/img/bg5.png';
+    if (score >= GAME_CONFIG.BG_98) return '/img/bg98.png';
+    if (score >= GAME_CONFIG.BG_dark) return '/img/bg1.png';
     return 'none'; // 기본 배경
   };
 
-  // 점수에 따른 캐릭터 이모지 결정 함수
+  // 점수에 따른 캐릭터 결정 함수
   const getCharacterEmoji = (score) => {
     if (score >= 950) return '🧚'; // 8점 이상이면 요정
     return '🧍🏻‍♀️'; // 기본
@@ -42,7 +47,7 @@ export default function Home() {
 
   // (성공엔딩) 점수가 1000점이 되면 게임 종료
   useEffect(() => {
-    if (score >= successEndScore && !gameEnded && !gameFailed) {
+    if (score >= GAME_CONFIG.SUCCESS_SCORE && !gameEnded && !gameFailed) {
       setGameEnded(true);
       // 똥 생성 중단
       setPoops([]);
@@ -51,7 +56,11 @@ export default function Home() {
 
   // (실패엔딩) 바닥에 떨어진 똥이 50개가 되면 게임 실패
   useEffect(() => {
-    if (fallenPoops.length >= failEndScore && !gameFailed && !gameEnded) {
+    if (
+      fallenPoops.length >= GAME_CONFIG.FAIL_POOP_COUNT &&
+      !gameFailed &&
+      !gameEnded
+    ) {
       setGameFailed(true);
       // 똥 생성 중단
       setPoops([]);
@@ -69,14 +78,25 @@ export default function Home() {
 
   //캐릭터 움직임 x축
   useEffect(() => {
-    const handleMouseMove = (e) => {
+    const handlePointerMove = (e) => {
       setMouseX(e.clientX);
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    const handleTouchMove = (e) => {
+      e.preventDefault(); // 스크롤 방지
+      const touch = e.touches[0];
+      setMouseX(touch.clientX);
+    };
+
+    // 포인터 이벤트 (마우스 + 터치)
+    window.addEventListener('pointermove', handlePointerMove);
+
+    // 터치 이벤트 (모바일 최적화)
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
 
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('pointermove', handlePointerMove);
+      window.removeEventListener('touchmove', handleTouchMove);
     };
   }, []);
 
@@ -134,7 +154,7 @@ export default function Home() {
     return () => clearInterval(collisionInterval);
   }, [poops]);
 
-  // 목숨 카운트 -똥이 바닥에 도달했는지 확인하고 fallenPoops에 추가
+  // 목숨 카운트 - 똥이 바닥에 도달했는지 확인하고 fallenPoops에 추가
   useEffect(() => {
     const checkFallenPoops = () => {
       poops.forEach((poop) => {
@@ -176,15 +196,7 @@ export default function Home() {
   if (gameFailed) {
     return (
       <MultilingualProvider>
-        <div
-          className="text-white text-center flex flex-col h-screen w-full text-foreground"
-          style={{
-            backgroundImage: `url(${getBackgroundImage(0)})`,
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            backgroundRepeat: 'no-repeat',
-          }}
-        >
+        <div className="text-white text-center flex flex-col h-screen w-full text-foreground">
           <Header />
           <Footer />
 
@@ -195,7 +207,7 @@ export default function Home() {
           <div className="flex-1 flex flex-col justify-between w-full bottom-[10vh] sm:bottom-1/7 text-center leading-none">
             <span className="flex-1 flex items-end justify-center">
               <span className="text-shadow-lg leading-snug">
-                오 당신 유명해지지 못하셨군요 💩
+                아... <br /> 당신은 유명해지지 못하셨군요 💩
               </span>
             </span>
             <div className="pb-[10vh]">
@@ -204,7 +216,7 @@ export default function Home() {
                 onClick={restartGame}
                 className="h-12 bg-white text-black p-4 mr-2 rounded-lg font-bold hover:bg-gray-200 transition-colors"
               >
-                다시 도전합니다
+                괜찮아~ 잘 될거야
               </button>
             </div>
           </div>
@@ -242,21 +254,21 @@ export default function Home() {
                 당신은 이제 유명한 사람이 되었습니다!
               </span>
             </span>
-            <div className="pb-[10vh]">
+            <div className="pb-[9vh]">
               <div className="text-[4rem] sm:text-[6rem] my-4">👑</div>
               <button
                 onClick={restartGame}
-                className="h-12 bg-white text-black p-4 mr-2 rounded-lg font-bold hover:bg-gray-200 transition-colors"
+                className="h-12 bg-white text-black p-4 m-1 rounded-lg font-bold hover:bg-gray-200 transition-colors"
               >
-                다시하기
+                왕관의 무게 벗어던지다
               </button>
               <Link
                 href="https://idolstarwiki.vercel.app/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block h-12 bg-[#e42a8a] text-white p-4 rounded-lg font-bold hover:bg-[#a23e92] transition-colors"
+                className="inline-block m-1 h-12 bg-[#e42a8a] text-white p-4 rounded-lg font-bold hover:bg-[#a23e92] transition-colors"
               >
-                아이돌스타위키 작성하기
+                슈퍼스타가 되다.. 나무위키 작성하기
               </Link>
             </div>
           </div>
@@ -264,6 +276,7 @@ export default function Home() {
       </MultilingualProvider>
     );
   }
+
   return (
     <MultilingualProvider>
       <div
