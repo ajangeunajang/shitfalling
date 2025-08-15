@@ -15,16 +15,15 @@ export default function Home() {
   const [fallenPoops, setFallenPoops] = useState([]); // 바닥에 떨어진 똥들 추가
   const [gameFailed, setGameFailed] = useState(false); // 게임 실패 상태 추가
 
-  // 개선 방안 - 상수로 분리
   const GAME_CONFIG = {
     // 엔딩 점수 컷
     SUCCESS_SCORE: 1000,
-    FAIL_POOP_COUNT: 10,
+    FAIL_POOP_COUNT: 30,
 
     POOP_GENERATION_INTERVAL: 1000,
     COLLISION_CHECK_INTERVAL: 100,
     BG_dark: 500,
-    BG_98: 600,
+    BG_98: 700,
     BG_sea: 800,
     BG_universe: 900,
   };
@@ -34,7 +33,7 @@ export default function Home() {
     if (score >= GAME_CONFIG.SUCCESS_SCORE) return '/img/bg.webp';
     if (score >= GAME_CONFIG.BG_universe) return '/img/bg4.png';
     if (score >= GAME_CONFIG.BG_sea) return '/img/bg5.png';
-    if (score >= GAME_CONFIG.BG_98) return '/img/bg98.png';
+    if (score >= GAME_CONFIG.BG_98) return '/img/bg3.png';
     if (score >= GAME_CONFIG.BG_dark) return '/img/bg1.png';
     return 'none'; // 기본 배경
   };
@@ -44,6 +43,10 @@ export default function Home() {
     if (score >= 950) return '🧚'; // 8점 이상이면 요정
     return '🧍🏻‍♀️'; // 기본
   };
+
+  // 사운드 객체들 미리 생성
+  const scoreSound = new Audio('/sound/score.mp3');
+  scoreSound.volume = 0.5;
 
   // (성공엔딩) 점수가 1000점이 되면 게임 종료
   useEffect(() => {
@@ -146,6 +149,12 @@ export default function Home() {
           setShowImage(true);
           // 충돌된 똥 제거
           setPoops((prev) => prev.filter((p) => p.id !== poop.id));
+
+          // 사운드 재생
+          scoreSound.currentTime = 0; // 재생 위치를 처음으로
+          scoreSound.play().catch((error) => {
+            console.log('사운드 재생 실패:', error);
+          });
         }
       });
     };
@@ -216,7 +225,7 @@ export default function Home() {
                 onClick={restartGame}
                 className="h-12 bg-white text-black p-4 mr-2 rounded-lg font-bold hover:bg-gray-200 transition-colors"
               >
-                괜찮아~ 잘 될거야
+                괜찮아 잘 될거야
               </button>
             </div>
           </div>
@@ -268,7 +277,7 @@ export default function Home() {
                 rel="noopener noreferrer"
                 className="inline-block m-1 h-12 bg-[#e42a8a] text-white p-4 rounded-lg font-bold hover:bg-[#a23e92] transition-colors"
               >
-                슈퍼스타가 되다.. 나무위키 작성하기
+                슈스의 삶이란.. 나무위키 작성하기
               </Link>
             </div>
           </div>

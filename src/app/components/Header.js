@@ -9,10 +9,10 @@ export default function Header() {
   return (
     <MultilingualProvider>
       <header className="w-full pt-6">
-        <h1 className="text-shadow-lg text-[4rem] sm:text-[6rem] leading-snug">
+        <h1 className="text-shadow-lg text-[22vw] sm:text-[6rem] leading-snug">
           Shitfalling
         </h1>
-        <div>(1) 유명해진다 (2) 똥을 싸라</div>
+        <div>슈퍼스타가 되는 길.</div>
         <div
           className="box-shadow-lg fixed right-[0.5rem] top-[0.5rem] w-[2rem] h-[2rem] border-2 border-white rounded-[100px] flex items-center justify-center"
           onClick={() => setShowPopup(!showPopup)}

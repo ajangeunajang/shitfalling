@@ -11,11 +11,11 @@ export default function Footer() {
           src="/img/sun.jpg"
           alt="sun"
           fill
-          className="mix-blend-soft-light rounded-full object-cover translate-x-[40%] translate-y-[20%]"
+          className="mix-blend-color-burn rounded-full object-cover translate-x-[40%] translate-y-[20%]"
         />
       </div>
       <div>
-        © 2025. 유명해지는 법. 모든 권리 보유.{' '}
+        © 2025. Shitfalling. 모든 권리 보유.{' '}
         <span
           className="cursor-pointer transition-all duration-300 hover:scale-105"
           onMouseEnter={() => {
