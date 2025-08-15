@@ -19,7 +19,7 @@ export default function Home() {
   const GAME_CONFIG = {
     // 엔딩 점수 컷
     SUCCESS_SCORE: 1000,
-    FAIL_POOP_COUNT: 50,
+    FAIL_POOP_COUNT: 10,
 
     POOP_GENERATION_INTERVAL: 1000,
     COLLISION_CHECK_INTERVAL: 100,
