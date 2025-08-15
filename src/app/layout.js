@@ -10,7 +10,7 @@ export const metadata = {
     siteName: '유명해지는 법',
     images: [
       {
-        url: '/img/og_shitfalling.png',
+        url: '/img/og.png',
         width: 1200,
         height: 630,
         alt: '유명해지는 법 OG 이미지',
@@ -23,7 +23,7 @@ export const metadata = {
     card: 'summary_large_image',
     title: '유명해지는 법',
     description: '(1)똥을 싸다 (2)유명해진다 (1)유명해진다 (2)똥을 싸다',
-    images: ['/img/og_shitfalling.png'],
+    images: ['/img/og.png'],
   },
   robots: {
     index: true,
