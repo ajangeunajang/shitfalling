@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Footer from './components/Footer';
 import Header from './components/Header';
@@ -17,8 +17,8 @@ export default function Home() {
 
   const GAME_CONFIG = {
     // 엔딩 점수 컷
-    SUCCESS_SCORE: 1000,
-    FAIL_POOP_COUNT: 30,
+    SUCCESS_SCORE: 1,
+    FAIL_POOP_COUNT: 100,
 
     POOP_GENERATION_INTERVAL: 1000,
     COLLISION_CHECK_INTERVAL: 100,
@@ -113,7 +113,7 @@ export default function Home() {
   //똥 랜덤 생성
   useEffect(() => {
     const interval = setInterval(() => {
-      const randomLeft = Math.random() * window.innerWidth; // 화면 너비 내에서 랜덤
+      const randomLeft = Math.random() * window.innerWidth - 20; // 화면 너비 내에서 랜덤
       const newPoop = {
         id: Date.now(),
         left: randomLeft,
